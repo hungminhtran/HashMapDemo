@@ -1,8 +1,9 @@
-#include "HashMap"
+#include "HashMap.h"
 #include <climits>
 #include <iostream>
 
-bool HashMap::extend() {
+template <typename K, typename V, typename F = struct KeyHash<K, V>>
+bool HashMap<K, V, F>::extend() {
     //find the prime number larger than 2*current_table_size
     int new_size = TABLE_SIZE * 2 + 1
     for (; new_size < MAX_INT; new_size++)
@@ -16,7 +17,7 @@ bool HashMap::extend() {
     return true;
 
 }
-HashMap::~HashMap() {
+HashMap<class K, class V, class F> ::~HashMap() {
     //iterator all element in table
     for (std::vector::iterator it = this.table.begin(); it != this.table.end(); it++) {
         //get a node in table
@@ -31,7 +32,7 @@ HashMap::~HashMap() {
     }
 }
 //return true if push back successful else return false
-bool HashMap::push_back(const K &key, const V &value) {
+bool HashMap<class K, class V, class F> ::push_back(const K &key, const V &value) {
     unsigned int index = this.hashFunc(key);
     //if not colusion
     if (!this.table[index].isUsed()) {
@@ -51,7 +52,7 @@ bool HashMap::push_back(const K &key, const V &value) {
         return this.extend()
     return true;
 }
-V HashMap::get(const K &key) {
+HashMap<class K, class V, class F> ::get(const K &key) {
     unsigned int index = this.hashFunc(key);
     HashNode *temp = this.table[index];
     while (temp != NULL) {

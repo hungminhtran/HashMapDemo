@@ -9,17 +9,17 @@ template <typename K, typename V, typename F = struct KeyHash<K, V>>
 
 class HashMap {
 private:
-    static int TABLE_SIZE; //should be prime for better performace
-    std::vector<HashNode<K, V>> table(TABLE_SIZE);
+    int TABLE_SIZE = 11; //should be prime for better performace
+    std::vector<HashNode<K, V>> table;
     float factor;
-    int numElements
+    int numElements;
     F hashFunc;
     //extend table size to make the factor
     bool extend();
 
 public:
-    HashMap(): factor(0.75), TABLE_SIZE(11), numElements(0) {}
-    HashMap(factor, TABLE_SIZE=11): factor(factor), TABLE_SIZE(TABLE_SIZE), numElements(0) {}
+    HashMap(): factor(0.75), TABLE_SIZE(11), numElements(0) {};
+    HashMap(float factor, int TABLE_SIZE): factor(factor), TABLE_SIZE(TABLE_SIZE), numElements(0) {};
     ~HashMap();
     float getFactor() { return this.factor; }
     void setFactor(float new_factor) { this.factor = new_factor; }

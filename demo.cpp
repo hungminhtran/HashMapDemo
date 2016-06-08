@@ -1,12 +1,21 @@
-// vector::begin/end
+#include <vector>
 #include <iostream>
-#include <string>
-#include "HashMap.h"
+using namespace std;
+const int MAX_1 = 10;
+const int MAX_2 = 8;
+int main() {
+    vector<int> table(MAX_1);
+    for (int i = 0; i < MAX_2; i++)
+        table.push_back(i);
 
-int main () {
-
-    HashMap<int, string> myHashmap;
-    for (int i = 0; i < 13; i++)
-        myHashmap.add(i, "asdf " + std::to_string(i));
-    myHashmap.printf();
+    for (int i = 0; i < MAX_2; i++)
+        cout<<table[i]<<" ";
+    cout<<endl;
+    for (vector<int>::iterator it = table.begin(); it < table.end(); it++) {
+        cout<<*it<<" ";
+    }
+    cout<<endl;
+    for (int i = 0; i < MAX_2; i++)
+        cout<<table[i]<<" ";
+    cout<<endl;
 }
