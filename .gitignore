@@ -1,7 +1,9 @@
 *.out
 demo*.*
+*.bak
 /build/
 /dist/
 .dep.inc
 /nbproject/
+
 
