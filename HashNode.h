@@ -1,5 +1,3 @@
-#ifndef HASHNODE_H
-#define HASHNODE_H
 template <typename K, typename V>
 class HashNode {
 private:
@@ -9,11 +7,7 @@ private:
     bool isInUse;
 public:
     HashNode(const K &key, const V &value, const bool &isUsed, const HashNode *nextNode ): key(key), value(value), isInUse(isUsed), nextNode(nextNode) {}
-    HashNode() = default;
-
-    HashNode* getNext() const {
-        return this.nexNode;
-    }
+//    HashNode() = default;
 
     V getValue() const {
         return value;
@@ -32,12 +26,15 @@ public:
         HashNode::value = value;
     }
 
+    HashNode* getNext() const {
+        return this.nexNode;
+    }
+
     void setNext(HashNode *nextNode) {
         HashNode::nextNode = nextNode;
     }
 
     bool isUsed(void) { return isInUse; }
 
-    void setUsed(bool isUse) { isInUse = isUse; }
+    void setUsed(bool isUse) { this->isInUse = isUse; }
 };
-#endif

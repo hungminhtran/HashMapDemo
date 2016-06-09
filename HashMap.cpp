@@ -1,85 +1,87 @@
 #include "HashMap.h"
 #include <climits>
 #include <iostream>
+#include <cmath>
 
-template <typename K, typename V, typename F = struct KeyHash<K, V>>
-bool HashMap<K, V, F>::extend() {
-    //find the prime number larger than 2*current_table_size
-    int new_size = TABLE_SIZE * 2 + 1
-    for (; new_size < MAX_INT; new_size++)
-        for (int j = 2; j < (int)sqrt(i); j++)
-            if (new_size % j == 0)
-                break;
-    if (new_size == MAX_INT)
-        return false;
-    //resize table to this size
-    this.table.resize(new_size, 0);
-    return true;
-
-}
-HashMap<class K, class V, class F> ::~HashMap() {
+template <typename K, typename V, typename F>
+HashMap<K, V, F>::~HashMap() {
     //iterator all element in table
-    for (std::vector::iterator it = this.table.begin(); it != this.table.end(); it++) {
+    for (typename std::vector<HashNode<K, V> >::iterator it = this->table.begin(); it != this->table.end(); it++) {
         //get a node in table
-        HashNode *temp = *it;
+        HashNode<K, V> *temp = &*it;
         while (temp != NULL) {
-            HashNode *temp2 = temp;
+            HashNode<K, V> *temp2 = temp;
             //get next node
-            temp = temp.getNext()
+            temp = temp->getNext();
             //delete current node
-            delete *temp2;
+            delete temp2;
         }
     }
 }
+
+template <typename K, typename V, typename F>
 //return true if push back successful else return false
-bool HashMap<class K, class V, class F> ::push_back(const K &key, const V &value) {
-    unsigned int index = this.hashFunc(key);
+void HashMap<K, V, F>::test(){
+    std::cout<<"rung successfully"<<std::endl;
+    return;
+}
+
+template <typename K, typename V, typename F>
+bool HashMap<K, V, F>::put(const K &key, const V &value) {
+
+    unsigned int index = this->hashFunc(key);
     //if not colusion
-    if (!this.table[index].isUsed()) {
-        this.table[index].setKey(key);
-        this.table[index].setValue(value);
-        this.table[index].setUsed(true);
+    if (!this->table[index].isUsed()) {
+        this->table[index].setKey(key);
+        this->table[index].setValue(value);
+        this->table[index].setUsed(true);
     }
     //collision
     else
     {
-        this.table[index].nextNode = new HashNode(key, value, true, NULL);
-        if (this.table[index].nextNode == NULL)
+        //go to the lastest node
+        HashNode<K,V> *temp = this->table[index];
+        while (temp->getNext() != NULL)
+            temp  = temp->getNext();
+        temp->setNext(new HashNode<K, V>(key, value, true, NULL));
+        if (temp->getNext() == NULL)
             return false;
     }
-    this.numElements++;
-    if (this.numElements/TABLE_SIZE > this.factor)
-        return this.extend()
+    this->numElements++;
     return true;
 }
-HashMap<class K, class V, class F> ::get(const K &key) {
-    unsigned int index = this.hashFunc(key);
-    HashNode *temp = this.table[index];
-    while (temp != NULL) {
-        if (temp.key == key)
-            return temp.V;
-        temp = temp.getNext();
+
+template <typename K, typename V, typename F>
+V HashMap<K, V, F>::get(const K &key) {
+    unsigned int index = this->hashFunc(key);
+    HashNode<K, V> *temp = this->table[index];
+    while (temp->getNext() != NULL) {
+        if (temp->getKey() == key)
+            return temp->getValue();
+        temp = temp->getNext();
     }
     if (temp == NULL)
         return NULL;
 }
+
+template <typename K, typename V, typename F>
 //return 1 if remove successful else return -1, return 0 if key not found
-int HashMap::remove(const K &key) {
-    unsigned int index = this.hashFunc(key);
-    HashNode *temp = this.table[index];
-    if (temp.key == key) {
-        temp.key = temp.getNext().getKey();
-        temp.value = temp.getNext().getValue();
-        temp.nextNode = temp.getNext();
-        delete temp.getNext();
+int HashMap<K, V, F>::remove(const K &key) {
+    unsigned int index = this->hashFunc(key);
+    HashNode<K, V> *temp = this->table[index];
+    if (temp->getKey() == key) {
+        temp->setKey(temp->getNext()->getKey());
+        temp->setValue(temp->getNext()->getValue());
+        temp->setNext(temp->getNext());
+        delete temp->getNext();
         return 1;
     }
     else {
-        while (temp.getNext() != NULL) {
-            HashNode *prev = temp;
-            temp = temp.getNext()
-            if (temp.key == key) {
-                prev.setNext(temp.getNext());
+        while (temp->getNext() != NULL) {
+            HashNode<K, V> *prev = temp;
+            temp = temp->getNext();
+            if (temp->getKey() == key) {
+                prev->setNext(temp->getNext());
                 delete temp;
                 return 1;
                 }
@@ -88,11 +90,13 @@ int HashMap::remove(const K &key) {
         }
     return -1;
 }
+
+template <typename K, typename V, typename F>
 //print all key to stream
-void HashMap::print() {
-    for (std::vector::iterator it = this.table.begin(); it !=  this.table.end(); it++) {
+void HashMap<K, V, F>::print() {
+    for (typename std::vector<HashNode<K, V> >::iterator it = this.table.begin(); it !=  this.table.end(); it++) {
         std::cout<<"key: "<<*it.getKey()<<"; value: "<<*it.getValue();
-        HashNode *temp = *it;
+        HashNode<K, V> *temp = *it;
         while (temp->getNext() != NULL) {
             std::cout<<"\tkey linkedlist: "<<*it.getKey()<<"; value linkedlist: "<<*it.getValue();
             temp = temp->getNext();
