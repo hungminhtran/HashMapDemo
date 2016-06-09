@@ -1,3 +1,5 @@
+#ifndef HASHNODE_H
+#define HASHNODE_H
 #include <iostream>
 
 template <typename K, typename V>
@@ -11,7 +13,6 @@ public:
     HashNode(): isInUse(false), nextNode(NULL) {}
     HashNode(K key, V value, bool isUsed, HashNode *nextNode ): 
     key(key), value(value), isInUse(isUsed), nextNode(nextNode) {};
-//    HashNode() = default;
 
     V getValue() const { return value; }
 
@@ -29,3 +30,4 @@ public:
 
     void setUsed(bool isUse) { this->isInUse = isUse;}
 };
+#endif

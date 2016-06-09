@@ -1,3 +1,5 @@
+#ifndef KEYHASH_H
+#define KEYHASH_H
 static int TABLE_SIZE = 11; //should be prime for better performace
 template <typename K>
  struct KeyHash {
@@ -5,3 +7,4 @@ template <typename K>
          return key % TABLE_SIZE;
      }
  };
+#endif

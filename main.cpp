@@ -15,28 +15,32 @@ struct MyKeyHash {
 int main() {
     HashMap<int, std::string, struct MyKeyHash > *hmap = new HashMap<int, std::string, struct MyKeyHash >();
     hmap->test();
-//    hmap->put(1, "1");
+    ;
+    hmap->put(1, "1");
+    
     hmap->put(2, "2");
-    cout<<"pass"<<endl;
+    
     hmap->put(3, "3");
-    cout<<"pass"<<endl;
-    hmap->put(12, "12");
-    cout<<"pass"<<endl;
-    hmap->put(33, "33");
-
+    
+    hmap->put(12, "112");
+    
+    hmap->put(33, "333");
+    
+    hmap->print();
+    
     string value;
-    value = hmap->get(2);
+    hmap->get(2, value);
     assert(value == "2");
-    cout<<"pass"<<endl;
+   
 
-    value = hmap->get(12);
-    assert(value == "12");
-    cout<<"pass"<<endl;
+    hmap->get(12, value);
+    assert(value == "112");
+   
     
     hmap->remove(3);
-    value = hmap->get(3);
-//    assert(value == NULL);
-    cout<<"pass"<<endl;
+    if (hmap->get(3, value) == 0)
+        assert(value == "");
+   
 
     std::cout << "All tests passed!" << std::endl;
     delete hmap;

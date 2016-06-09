@@ -1,3 +1,5 @@
+#ifndef HASHMAP_H
+#define HASHMAP_H
 #include "HashNode.h"
 #include "KeyHash.h"
 #include <vector>
@@ -8,20 +10,25 @@
 template <typename K, typename V, typename F = struct KeyHash<K> >
 class HashMap {
 private:
-    std::vector<HashNode<K, V> > table;
+    HashNode<K, V>** table;
     float factor;
     int numElements;
     F hashFunc;
 public:
 
-    HashMap() : factor(0.75), numElements(0) {
+    HashMap() {
+        this->factor = 0.75;
+        this->numElements = 0;
+        table = new HashNode<K, V>*[TABLE_SIZE];
+        //        for (int i = 0; i < TABLE_SIZE; i++)
+        //            table[i] = NULL;
     };
     // HashMap(float factor): factor(factor), numElements(0) {};
 
     ~HashMap() {
-        for (typename std::vector<HashNode<K, V> >::iterator it = this->table.begin(); it != this->table.end(); it++) {
+        for (int i = 0; i < TABLE_SIZE; i++) {
             //get a node in table
-            HashNode<K, V> *temp = &*it;
+            HashNode<K, V> *temp = this->table[i];
             while (temp != NULL) {
                 HashNode<K, V> *temp2 = temp;
                 //get next node
@@ -30,14 +37,15 @@ public:
                 delete temp2;
             }
         }
+        delete [] this->table;
     }
 
     float getFactor() {
-        return this.factor;
+        return this->factor;
     }
 
     void setFactor(float new_factor) {
-        this.factor = new_factor;
+        this->factor = new_factor;
     }
 
     void test() {
@@ -49,19 +57,25 @@ public:
     bool put(const K &key, const V &value) {
 
         unsigned int index = this->hashFunc(key);
-        //if not colusion
-        if (!this->table[index].isUsed()) {
-            this->table[index].setKey(key);
-            this->table[index].setValue(value);
-            this->table[index].setUsed(true);
-        }            //collision
+        //check if key is equal, replace value
+        HashNode<K, V> *temp = this->table[index];
+        
+        while (temp!= NULL && temp->getKey() != key)
+            temp = temp->getNext();
+        if (temp != NULL) {
+            temp->setValue(value);
+            return true;
+        }
+        if (this->table[index] == NULL) {
+            this->table[index] = new HashNode<K, V>(key, value, true, NULL);
+        }//collision
         else {
             //go to the lastest node
-            HashNode<K, V> *temp;
-            *temp = this->table[index];
+            temp = this->table[index];
             while (temp->getNext() != NULL)
                 temp = temp->getNext();
-            temp->setNext(new HashNode<K, V>(key, value, true, NULL));
+            HashNode<K, V> *temp2 = new HashNode<K, V>(key, value, true, NULL);
+            temp->setNext(temp2);
             if (temp->getNext() == NULL)
                 return false;
         }
@@ -73,8 +87,7 @@ public:
 
     int remove(const K &key) {
         unsigned int index = this->hashFunc(key);
-        HashNode<K, V> *temp;
-        *temp = this->table[index];
+        HashNode<K, V> *temp = this->table[index];
         if (temp->getKey() == key) {
             temp->setKey(temp->getNext()->getKey());
             temp->setValue(temp->getNext()->getValue());
@@ -98,27 +111,30 @@ public:
     //print all key to stream
 
     void print() {
-        for (typename std::vector<HashNode<K, V> >::iterator it = this.table.begin(); it != this.table.end(); it++) {
-            std::cout << "key: " << *it.getKey() << "; value: " << *it.getValue();
-            HashNode<K, V> *temp = *it;
-            while (temp->getNext() != NULL) {
-                std::cout << "\tkey linkedlist: " << *it.getKey() << "; value linkedlist: " << *it.getValue();
-                temp = temp->getNext();
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            if (this->table[i] != NULL) {
+                std::cout << "key: " << this->table[i]->getKey() << "; value: " << this->table[i]->getValue();
+                HashNode<K, V> *temp = this->table[i]->getNext();
+                while (temp != NULL) {
+                    std::cout << "\tkey linkedlist: " << temp->getKey() << "; value linkedlist: " << temp->getValue();
+                    temp = temp->getNext();
+                }
+                std::cout << std::endl;
             }
-            std::cout << std::endl;
         }
     }
 
-    V get(const K &key) {
+    int get(const K &key, V &value) {
         unsigned int index = this->hashFunc(key);
-        HashNode<K, V> *temp;
-        *temp = this->table[index];
-        while (temp->getNext() != NULL) {
-            if (temp->getKey() == key)
-                return temp->getValue();
+        HashNode<K, V> *temp = this->table[index];
+        while (temp != NULL) {
+            if (temp->getKey() == key) {
+                value = temp->getValue();
+                return 0;
+            }
             temp = temp->getNext();
         }
-        if (temp == NULL)
-            return NULL;
+        return -1;
     }
 };
+#endif
