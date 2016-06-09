@@ -2,3 +2,6 @@
 demo*.*
 /build/
 /dist/
+.dep.inc
+/nbproject/
+
