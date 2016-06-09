@@ -1,3 +1,5 @@
+#include <iostream>
+
 template <typename K, typename V>
 class HashNode {
 private:
@@ -6,35 +8,24 @@ private:
     HashNode *nextNode;
     bool isInUse;
 public:
-    HashNode(const K &key, const V &value, const bool &isUsed, const HashNode *nextNode ): key(key), value(value), isInUse(isUsed), nextNode(nextNode) {}
+    HashNode(): isInUse(false), nextNode(NULL) {}
+    HashNode(K key, V value, bool isUsed, HashNode *nextNode ): 
+    key(key), value(value), isInUse(isUsed), nextNode(nextNode) {};
 //    HashNode() = default;
 
-    V getValue() const {
-        return value;
-    }
+    V getValue() const { return value; }
 
-    K getKey() const {
-        return getKey;
-    }
+    K getKey() const { return key; }
 
-    void setKey(K key) {
-        HashNode::key = key;
-        //this.key = key
-    }
+    void setKey(K key) {this->key = key; }
 
-    void setValue(V value) {
-        HashNode::value = value;
-    }
+    void setValue(V value) { this ->value = value; }
 
-    HashNode* getNext() const {
-        return this.nexNode;
-    }
+    HashNode* getNext() { return nextNode;}
 
-    void setNext(HashNode *nextNode) {
-        HashNode::nextNode = nextNode;
-    }
+    void setNext(HashNode *nextNode) { this->nextNode = nextNode;}
 
-    bool isUsed(void) { return isInUse; }
+    bool isUsed(void) { return isInUse;}
 
-    void setUsed(bool isUse) { this->isInUse = isUse; }
+    void setUsed(bool isUse) { this->isInUse = isUse;}
 };
